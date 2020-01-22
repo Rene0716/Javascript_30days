@@ -25,6 +25,16 @@
     /*
       misc styles, nothing to do with CSS variables
     */
+    :root{
+      --base:#fca;
+      --spacing: 10px;
+      --blur: 5px;
+    }
+    img{
+      padding: var(--spacing);
+      background-color: var(--base);
+      filter: blur(var(--blur));
+    }
 
     body {
       text-align: center;
@@ -45,6 +55,42 @@
   </style>
 
   <script>
+  ; (function(){
+      //先設定CSS的變數,並且將CSS變數名稱設定為DOM物件的屬性名稱(以便等下做動態抓取)
+      //抓要做變化的DOM物件
+      const inputs=document.querySelectorAll('input')
+      function updateHandler(){
+          switch(this.name){
+            case 'spacing':
+              document.querySelector('img').style.padding=`${this.value}+'px'`
+              break;
+            case 'blur':
+              document.querySelector('img').style.filter=`${this.value}+'px'`
+              break;
+            case 'base':
+              document.querySelector('img').style.backgroundColor=`${this.value}`
+              break;
+          }
+        // console.log(this.value)
+        //將抓取到的值設定為各自的css變數中,這是當資料變動時,css就可以跟著變動
+        // setProperty('propertyName','value')
+          // 1.使用三元運算:
+          // 當屬性是有px的屬性時+px,沒有px的屬性+空字串
+          // 缺點:只能以有/無px來判斷,無法有兩個單位以上的屬性
+          // document.querySelector('html').style.setProperty(`--${this.name}`,this.value+(this.name==='base'?'':'px'))
+          // console.log(this.value+(this.name==='base'?'':'px'))
+          // 2.使用dataSet物件來計算:定義單位為之前寫在DOM內dataSet屬性值
+          // console.log(this.dataset.sizing)
+          // const unit=this.dataset.sizing|| ''
+          // document.querySelector('html').style.setProperty(`--${this.name}`,this.value+unit)
+      }
+
+
+      //當input變化,時抓他選取的value
+      inputs.forEach(function(key){
+        key.addEventListener('change', updateHandler)
+      })
+  })()
   </script>
 
 </body>
